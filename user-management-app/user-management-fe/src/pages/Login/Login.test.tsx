@@ -6,3 +6,9 @@ it('should render the login title', () => {
 
   expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument()
 })
+
+it('should render a label with the text of Email, with a control associated to that label', () => {
+  render(<Login />)
+
+  expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+})
