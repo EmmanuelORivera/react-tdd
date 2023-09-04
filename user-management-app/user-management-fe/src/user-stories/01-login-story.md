@@ -4,15 +4,15 @@
 
 ##### Acceptance Criteria (AC):
 
-- There must be a login page.
-- The login page must have a form with the following fields: email, password and
-  a submit button.
-- The email and password inputs are required.
-- If the user leaves empty fields and clicks the submit button, the login page
-  should display required messages as the format: “The [field name] is required”
-  aside of the proper field.
-- The email value should contain the proper email format (the “@”, domain value,
-  etc).
+- [x] There must be a login page.
+- [x] The login page must have a form with the following fields: email, password and
+      a submit button.
+- [x] The email and password inputs are required.
+- [x] If the user leaves empty fields and clicks the submit button, the login page
+      should display required messages as the format: “The [field name] is required”
+      aside of the proper field.
+- [x] The email value should contain the proper email format (the “@”, domain value,
+      etc).
 - The submit button should be disabbled while the form page is fetching the
   data. After fetching, the submit button does not have to be disabled.
 - There should be a loading indicator at the top of the form while it is
