@@ -1,17 +1,12 @@
 import React from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import { loginSchema } from './loginSchema'
 
 interface Inputs {
   email: string
   password: string
 }
-
-const loginSchema = yup.object({
-  email: yup.string().required('The email is required'),
-  password: yup.string().required('The password is required'),
-})
 
 const Login = () => {
   const {
