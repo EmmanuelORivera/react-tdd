@@ -1,5 +1,6 @@
 import { screen, render } from '@testing-library/react'
 import Login from './Login'
+import userEvent from '@testing-library/user-event'
 
 describe('Login Component', () => {
   it('should render the login title', () => {
@@ -47,9 +48,9 @@ describe('Login Component', () => {
   it('should render a button with the Submit text', () => {
     render(<Login />)
 
-    const passwordInput = screen.getByRole('button', { name: /submit/i })
+    const submitButton = screen.getByRole('button', { name: /submit/i })
 
-    expect(passwordInput).toBeInTheDocument()
-    expect(passwordInput).toHaveAttribute('type', 'submit')
+    expect(submitButton).toBeInTheDocument()
+    expect(submitButton).toHaveAttribute('type', 'submit')
   })
 })
