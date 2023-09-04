@@ -7,6 +7,8 @@ describe('Login Component', () => {
     render(<Login />)
   })
 
+  const getSubmitButton = () => screen.getByRole('button', { name: /submit/i })
+
   it('should render the login title', () => {
     expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument()
   })
@@ -38,14 +40,14 @@ describe('Login Component', () => {
   })
 
   it('should render a button with the Submit text', () => {
-    const submitButton = screen.getByRole('button', { name: /submit/i })
+    const submitButton = getSubmitButton()
 
     expect(submitButton).toBeInTheDocument()
     expect(submitButton).toHaveAttribute('type', 'submit')
   })
 
   it('should validate the inputs as required', async () => {
-    userEvent.click(screen.getByRole('button', { name: /submit/i }))
+    userEvent.click(getSubmitButton())
 
     expect(
       await screen.findByText(/The email is required/i)
