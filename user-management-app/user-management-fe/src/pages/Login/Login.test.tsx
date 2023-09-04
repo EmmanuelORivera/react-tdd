@@ -53,4 +53,17 @@ describe('Login Component', () => {
     expect(submitButton).toBeInTheDocument()
     expect(submitButton).toHaveAttribute('type', 'submit')
   })
+
+  it('should validate the inputs as required', async () => {
+    render(<Login />)
+
+    userEvent.click(screen.getByRole('button', { name: /submit/i }))
+
+    expect(
+      await screen.findByText(/The email is required/i)
+    ).toBeInTheDocument()
+    expect(
+      await screen.findByText(/The password is required/i)
+    ).toBeInTheDocument()
+  })
 })
