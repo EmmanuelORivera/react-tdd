@@ -22,3 +22,12 @@ it('should render a label with the text of Password, with a control associated t
   expect(passwordInput).toBeInTheDocument()
   expect(passwordInput).toHaveAttribute('type', 'password')
 })
+
+it('should render a button with the Submit text', () => {
+  render(<Login />)
+
+  const passwordInput = screen.getByRole('button', { name: /submit/i })
+
+  expect(passwordInput).toBeInTheDocument()
+  expect(passwordInput).toHaveAttribute('type', 'submit')
+})
