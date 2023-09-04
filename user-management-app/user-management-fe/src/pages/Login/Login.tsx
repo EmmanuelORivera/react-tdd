@@ -1,38 +1,49 @@
 import React from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import { useForm, SubmitHandler } from 'react-hook-form'
+
+interface Inputs {
+  email: string
+  password: string
+}
 
 const Login = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>()
 
-    const formElement = event.currentTarget
-
-    const formData = new FormData(formElement)
-
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    if (!email) {
-      toast.error('The email is required')
-    }
-    if (!password) {
-      toast.error('The password is required')
-    }
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data)
   }
 
   return (
     <>
       <h1 className="text-3xl">Login</h1>
-      <form data-testid="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input type="email" id="email" name="email" required />
 
+      <form data-testid="login-form" onSubmit={handleSubmit(onSubmit)}>
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          {...register('email', { required: 'The email is required' })}
+          required
+        />
+
+        {errors.password && (
+          <p className="text-red-500">{errors.password.message}</p>
+        )}
         <label htmlFor="password">Password</label>
-        <input type="password" id="password" name="password" required />
+        <input
+          type="password"
+          id="password"
+          {...register('password', { required: 'The password is required' })}
+          required
+        />
 
         <button type="submit">Submit</button>
       </form>
-      <ToastContainer />
     </>
   )
 }
