@@ -56,4 +56,14 @@ describe('Login Component', () => {
       await screen.findByText(/The password is required/i)
     ).toBeInTheDocument()
   })
+
+  it('should validate the input email format when form it is submitted', async () => {
+    userEvent.type(screen.getByLabelText(/email/i), 'invalid email')
+
+    userEvent.click(getSubmitButton())
+
+    expect(
+      await screen.findByText(/The email is not valid/i)
+    ).toBeInTheDocument()
+  })
 })
