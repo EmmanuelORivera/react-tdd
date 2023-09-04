@@ -1,17 +1,24 @@
 import React from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 interface Inputs {
   email: string
   password: string
 }
 
+const loginSchema = yup.object({
+  email: yup.string().required('The email is required'),
+  password: yup.string().required('The password is required'),
+})
+
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({ resolver: yupResolver(loginSchema) })
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data)
@@ -27,7 +34,7 @@ const Login = () => {
         <input
           type="email"
           id="email"
-          {...register('email', { required: 'The email is required' })}
+          {...register('email', { required: true })}
           required
         />
 
@@ -38,7 +45,7 @@ const Login = () => {
         <input
           type="password"
           id="password"
-          {...register('password', { required: 'The password is required' })}
+          {...register('password', { required: true })}
           required
         />
 
