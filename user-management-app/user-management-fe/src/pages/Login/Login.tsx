@@ -1,23 +1,12 @@
 import React from 'react'
-import axios from 'axios'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { loginSchema } from './loginSchema'
-import { useMutation } from 'react-query'
-
-interface Inputs {
-  email: string
-  password: string
-}
-
-const loginService = async (email: string, password: string) => {
-  return axios.post('/login', { email, password })
-}
+import { useLoginMutation } from './useLoginMutation'
+import { Inputs } from './interfaces/Inputs'
 
 const Login = () => {
-  const mutation = useMutation((payload: Inputs) =>
-    loginService(payload.email, payload.password)
-  )
+  const mutation = useLoginMutation()
   const {
     register,
     handleSubmit,
