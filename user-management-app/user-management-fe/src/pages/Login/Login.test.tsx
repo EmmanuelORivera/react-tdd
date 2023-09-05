@@ -78,4 +78,16 @@ describe('Login Component', () => {
 
     await waitFor(() => expect(getSubmitButton()).toBeDisabled())
   })
+
+  it('should not be disabled when the fetching data is done', async () => {
+    expect(getSubmitButton()).not.toBeDisabled()
+
+    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
+    userEvent.type(screen.getByLabelText(/password/i), 'p')
+
+    userEvent.click(getSubmitButton())
+
+    await waitFor(() => expect(getSubmitButton()).toBeDisabled())
+    await waitFor(() => expect(getSubmitButton()).not.toBeDisabled())
+  })
 })
