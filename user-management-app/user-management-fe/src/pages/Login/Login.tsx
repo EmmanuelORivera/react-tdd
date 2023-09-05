@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { loginSchema } from './loginSchema'
@@ -8,15 +9,21 @@ interface Inputs {
   password: string
 }
 
+const loginService = async (email: string, password: string) => {
+  await axios.post('/login', { email, password })
+}
+
 const Login = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({ resolver: yupResolver(loginSchema) })
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
+    setIsLoading(true)
+    await loginService(email, password)
   }
 
   return (
@@ -44,7 +51,9 @@ const Login = () => {
           required
         />
 
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={isLoading}>
+          Submit
+        </button>
       </form>
     </>
   )

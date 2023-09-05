@@ -1,4 +1,4 @@
-import { screen, render } from '@testing-library/react'
+import { screen, render, waitFor } from '@testing-library/react'
 import Login from './Login'
 import userEvent from '@testing-library/user-event'
 
@@ -65,5 +65,16 @@ describe('Login Component', () => {
     expect(
       await screen.findByText(/The email is not valid/i)
     ).toBeInTheDocument()
+  })
+
+  it.only('should disable the submit button while is fetching', async () => {
+    expect(getSubmitButton()).not.toBeDisabled()
+
+    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
+    userEvent.type(screen.getByLabelText(/password/i), 'p')
+
+    userEvent.click(getSubmitButton())
+
+    await waitFor(() => expect(getSubmitButton()).toBeDisabled())
   })
 })
