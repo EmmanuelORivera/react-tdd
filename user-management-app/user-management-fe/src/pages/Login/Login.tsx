@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import axios from 'axios'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { loginSchema } from './loginSchema'
+import { useMutation } from 'react-query'
 
 interface Inputs {
   email: string
@@ -10,11 +11,13 @@ interface Inputs {
 }
 
 const loginService = async (email: string, password: string) => {
-  await axios.post('/login', { email, password })
+  return axios.post('/login', { email, password })
 }
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const mutation = useMutation((payload: Inputs) =>
+    loginService(payload.email, payload.password)
+  )
   const {
     register,
     handleSubmit,
@@ -22,8 +25,7 @@ const Login = () => {
   } = useForm<Inputs>({ resolver: yupResolver(loginSchema) })
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
-    setIsLoading(true)
-    await loginService(email, password)
+    mutation.mutate({ email, password })
   }
 
   return (
@@ -51,7 +53,7 @@ const Login = () => {
           required
         />
 
-        <button type="submit" disabled={isLoading}>
+        <button type="submit" disabled={mutation.isLoading}>
           Submit
         </button>
       </form>
