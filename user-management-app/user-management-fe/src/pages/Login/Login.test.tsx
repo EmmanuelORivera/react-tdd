@@ -1,16 +1,11 @@
-import { screen, render, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import Login from './Login'
 import userEvent from '@testing-library/user-event'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { renderWithProviders } from '../../mocks/renderWithProviders'
 
 describe('Login Component', () => {
-  const queryClient = new QueryClient()
   beforeEach(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Login />
-      </QueryClientProvider>
-    )
+    renderWithProviders(<Login />)
   })
 
   const getSubmitButton = () => screen.getByRole('button', { name: /submit/i })
@@ -73,7 +68,7 @@ describe('Login Component', () => {
     ).toBeInTheDocument()
   })
 
-  it.only('should disable the submit button while is fetching', async () => {
+  it('should disable the submit button while is fetching', async () => {
     expect(getSubmitButton()).not.toBeDisabled()
 
     userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
