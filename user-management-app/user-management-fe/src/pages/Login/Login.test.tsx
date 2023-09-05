@@ -1,10 +1,16 @@
 import { screen, render, waitFor } from '@testing-library/react'
 import Login from './Login'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 describe('Login Component', () => {
+  const queryClient = new QueryClient()
   beforeEach(() => {
-    render(<Login />)
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Login />
+      </QueryClientProvider>
+    )
   })
 
   const getSubmitButton = () => screen.getByRole('button', { name: /submit/i })
