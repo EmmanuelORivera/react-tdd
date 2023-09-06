@@ -2,6 +2,8 @@ import { screen, waitFor } from '@testing-library/react'
 import Login from './Login'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../mocks/renderWithProviders'
+import { server } from '../../mocks/server'
+import { rest } from 'msw'
 
 describe('Login Component', () => {
   beforeEach(() => {
@@ -9,6 +11,17 @@ describe('Login Component', () => {
   })
 
   const getSubmitButton = () => screen.getByRole('button', { name: /submit/i })
+  const mockServerWithError = () =>
+    server.use(
+      rest.post('/login', (req, res, ctx) => res(ctx.delay(1), ctx.status(500)))
+    )
+
+  const fillAndSendLoginForm = () => {
+    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
+    userEvent.type(screen.getByLabelText(/password/i), 'p')
+
+    userEvent.click(getSubmitButton())
+  }
 
   it('should render the login title', () => {
     expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument()
@@ -71,10 +84,7 @@ describe('Login Component', () => {
   it('should disable the submit button while is fetching', async () => {
     expect(getSubmitButton()).not.toBeDisabled()
 
-    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
-    userEvent.type(screen.getByLabelText(/password/i), 'p')
-
-    userEvent.click(getSubmitButton())
+    fillAndSendLoginForm()
 
     await waitFor(() => expect(getSubmitButton()).toBeDisabled())
   })
@@ -84,10 +94,7 @@ describe('Login Component', () => {
       screen.queryByRole('progressbar', { name: /loading/i })
     ).not.toBeInTheDocument()
 
-    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
-    userEvent.type(screen.getByLabelText(/password/i), 'p')
-
-    userEvent.click(getSubmitButton())
+    fillAndSendLoginForm()
 
     expect(await screen.findByRole('progressbar', { name: /loading/i }))
     // await waitFor(() => expect(getSubmitButton()).toBeDisabled())
@@ -96,12 +103,19 @@ describe('Login Component', () => {
   it('should not be disabled when the fetching data is done', async () => {
     expect(getSubmitButton()).not.toBeDisabled()
 
-    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
-    userEvent.type(screen.getByLabelText(/password/i), 'p')
-
-    userEvent.click(getSubmitButton())
+    fillAndSendLoginForm()
 
     await waitFor(() => expect(getSubmitButton()).toBeDisabled())
     await waitFor(() => expect(getSubmitButton()).not.toBeDisabled())
+  })
+
+  it('should display "Unexpected error, please try again" when there is an error from the api login', async () => {
+    mockServerWithError()
+
+    fillAndSendLoginForm()
+
+    expect(
+      await screen.findByText('Unexpected error, please try again')
+    ).toBeInTheDocument()
   })
 })

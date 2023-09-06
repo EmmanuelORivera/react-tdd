@@ -24,6 +24,8 @@ const Login = () => {
 
       {mutation.isLoading && <Loader />}
 
+      {mutation.error && <div>Unexpected error, please try again</div>}
+
       <form data-testid="login-form" onSubmit={handleSubmit(onSubmit)}>
         {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         <label htmlFor="email">Email</label>
