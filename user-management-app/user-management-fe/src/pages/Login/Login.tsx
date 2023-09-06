@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { loginSchema } from './loginSchema'
 import { useLoginMutation } from './useLoginMutation'
 import { Inputs } from './interfaces/Inputs'
+import Loader from '../../components/Loader'
 
 const Login = () => {
   const mutation = useLoginMutation()
@@ -20,6 +21,8 @@ const Login = () => {
   return (
     <>
       <h1 className="text-3xl">Login</h1>
+
+      {mutation.isLoading && <Loader />}
 
       <form data-testid="login-form" onSubmit={handleSubmit(onSubmit)}>
         {errors.email && <p className="text-red-500">{errors.email.message}</p>}

@@ -79,6 +79,20 @@ describe('Login Component', () => {
     await waitFor(() => expect(getSubmitButton()).toBeDisabled())
   })
 
+  it('should display a loading indicator while is fetching the login', async () => {
+    expect(
+      screen.queryByRole('progressbar', { name: /loading/i })
+    ).not.toBeInTheDocument()
+
+    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
+    userEvent.type(screen.getByLabelText(/password/i), 'p')
+
+    userEvent.click(getSubmitButton())
+
+    expect(await screen.findByRole('progressbar', { name: /loading/i }))
+    // await waitFor(() => expect(getSubmitButton()).toBeDisabled())
+  })
+
   it('should not be disabled when the fetching data is done', async () => {
     expect(getSubmitButton()).not.toBeDisabled()
 
