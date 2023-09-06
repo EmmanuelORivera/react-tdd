@@ -11,9 +11,11 @@ describe('Login Component', () => {
   })
 
   const getSubmitButton = () => screen.getByRole('button', { name: /submit/i })
-  const mockServerWithError = () =>
+  const mockServerWithError = (statusCode: number) =>
     server.use(
-      rest.post('/login', (req, res, ctx) => res(ctx.delay(1), ctx.status(500)))
+      rest.post('/login', (req, res, ctx) =>
+        res(ctx.delay(1), ctx.status(statusCode))
+      )
     )
 
   const fillAndSendLoginForm = () => {
@@ -110,12 +112,22 @@ describe('Login Component', () => {
   })
 
   it('should display "Unexpected error, please try again" when there is an error from the api login', async () => {
-    mockServerWithError()
+    mockServerWithError(500)
 
     fillAndSendLoginForm()
 
     expect(
       await screen.findByText('Unexpected error, please try again')
+    ).toBeInTheDocument()
+  })
+
+  it('should display "The email or password are not correct" when the credentials are invalid', async () => {
+    mockServerWithError(401)
+
+    fillAndSendLoginForm()
+
+    expect(
+      await screen.findByText('The email or password are not correct')
     ).toBeInTheDocument()
   })
 })

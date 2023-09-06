@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { loginSchema } from './loginSchema'
 import { useLoginMutation } from './useLoginMutation'
 import { Inputs } from './interfaces/Inputs'
 import Loader from '../../components/Loader'
+import axios from 'axios'
 
 const Login = () => {
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const mutation = useLoginMutation()
   const {
     register,
@@ -15,7 +17,18 @@ const Login = () => {
   } = useForm<Inputs>({ resolver: yupResolver(loginSchema) })
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
-    mutation.mutate({ email, password })
+    mutation.mutate(
+      { email, password },
+      {
+        onError(error) {
+          let internalErrorMessage = 'Unexpected error, please try again'
+          if (axios.isAxiosError(error) && error.response?.status === 401) {
+            internalErrorMessage = 'The email or password are not correct'
+          }
+          setErrorMessage(internalErrorMessage)
+        },
+      }
+    )
   }
 
   return (
@@ -24,7 +37,7 @@ const Login = () => {
 
       {mutation.isLoading && <Loader />}
 
-      {mutation.error && <div>Unexpected error, please try again</div>}
+      {mutation.isError && <div>{errorMessage}</div>}
 
       <form data-testid="login-form" onSubmit={handleSubmit(onSubmit)}>
         {errors.email && <p className="text-red-500">{errors.email.message}</p>}
