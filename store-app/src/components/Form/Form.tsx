@@ -1,18 +1,71 @@
 import { TextField, NativeSelect, InputLabel, Button } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 
 const Form = () => {
+  const [formErrors, setFormErrors] = useState({ name: '', size: '', type: '' })
+  const [formData, setFormData] = useState({ name: '', size: '', type: '' })
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!formData.name) {
+      setFormErrors((prevState) => ({
+        ...prevState,
+        name: 'The name is required',
+      }))
+    }
+
+    if (!formData.size) {
+      setFormErrors((prevState) => ({
+        ...prevState,
+        size: 'The size is required',
+      }))
+    }
+
+    if (!formData.type) {
+      setFormErrors((prevState) => ({
+        ...prevState,
+        type: 'The type is required',
+      }))
+    }
+  }
+
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = event.target
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
   return (
     <>
       <h1>Create Product</h1>
 
-      <form>
-        <TextField label="name" id="name" />
-        <TextField label="size" id="size" />
+      <form onSubmit={handleSubmit}>
+        <TextField
+          onChange={handleChange}
+          label="name"
+          id="name"
+          helperText={formErrors.name}
+        />
+
+        <TextField
+          onChange={handleChange}
+          label="size"
+          id="size"
+          helperText={formErrors.size}
+        />
+
         <InputLabel variant="standard" htmlFor="type">
           Type
         </InputLabel>
         <NativeSelect
+          onChange={handleChange}
           defaultValue=""
           inputProps={{
             name: 'type',
@@ -23,7 +76,9 @@ const Form = () => {
           <option value="furniture">Furniture</option>
           <option value="clothing">Clothing</option>
         </NativeSelect>
-        <Button>Submit</Button>
+
+        {formErrors.type && <p>{formErrors.type}</p>}
+        <Button type="submit">Submit</Button>
       </form>
     </>
   )
