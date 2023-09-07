@@ -32,39 +32,55 @@ const Login = () => {
   }
 
   return (
-    <>
-      <h1 className="text-3xl">Login</h1>
+    <div className="flex flex-col justify-center gap-4 max-w-md mx-auto mt-20">
+      <h1 className="text-3xl text-center">Login</h1>
 
-      {mutation.isLoading && <Loader />}
+      {mutation.isLoading && <Loader className="mx-auto" />}
 
-      {mutation.isError && <div>{errorMessage}</div>}
+      {mutation.isError && (
+        <div className="text-center text-red-400">{errorMessage}</div>
+      )}
 
-      <form data-testid="login-form" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col gap-2"
+        data-testid="login-form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <label className="font-medium" htmlFor="email">
+          Email
+        </label>
         {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-        <label htmlFor="email">Email</label>
         <input
+          className="border rounded p-2"
           type="email"
           id="email"
           {...register('email', { required: true })}
           required
         />
 
+        <label className="font-medium" htmlFor="password">
+          Password
+        </label>
         {errors.password && (
           <p className="text-red-500">{errors.password.message}</p>
         )}
-        <label htmlFor="password">Password</label>
         <input
+          className="border rounded p-2"
           type="password"
           id="password"
           {...register('password', { required: true })}
           required
         />
 
-        <button type="submit" disabled={mutation.isLoading}>
+        <button
+          className="bg-indigo-600 hover:bg-indigo-500 font-medium text-white rounded py-1.5"
+          type="submit"
+          disabled={mutation.isLoading}
+        >
           Submit
         </button>
       </form>
-    </>
+    </div>
   )
 }
 
