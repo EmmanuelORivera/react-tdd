@@ -1,4 +1,4 @@
-import { TextField, NativeSelect, InputLabel } from '@mui/material'
+import { TextField, NativeSelect, InputLabel, Button } from '@mui/material'
 import React from 'react'
 
 const Form = () => {
@@ -23,6 +23,7 @@ const Form = () => {
           <option value="furniture">Furniture</option>
           <option value="clothing">Clothing</option>
         </NativeSelect>
+        <Button>Submit</Button>
       </form>
     </>
   )

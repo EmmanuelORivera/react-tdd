@@ -21,4 +21,8 @@ describe('Form', () => {
     expect(screen.queryByText(/furniture/i)).toBeInTheDocument()
     expect(screen.queryByText(/clothing/i)).toBeInTheDocument()
   })
+
+  it('should exists the submit button', () => {
+    expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
+  })
 })
