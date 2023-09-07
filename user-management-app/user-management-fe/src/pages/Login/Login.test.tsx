@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../mocks/renderWithProviders'
 import { server } from '../../mocks/server'
 import { rest } from 'msw'
+import { mswApi } from '../../mocks/handlers'
 
 describe('Login Component', () => {
   beforeEach(() => {
@@ -13,7 +14,7 @@ describe('Login Component', () => {
   const getSubmitButton = () => screen.getByRole('button', { name: /submit/i })
   const mockServerWithError = (statusCode: number) =>
     server.use(
-      rest.post('/login', (req, res, ctx) =>
+      rest.post(mswApi('/login'), (req, res, ctx) =>
         res(ctx.delay(1), ctx.status(statusCode))
       )
     )
@@ -99,7 +100,6 @@ describe('Login Component', () => {
     fillAndSendLoginForm()
 
     expect(await screen.findByRole('progressbar', { name: /loading/i }))
-    // await waitFor(() => expect(getSubmitButton()).toBeDisabled())
   })
 
   it('should not be disabled when the fetching data is done', async () => {
