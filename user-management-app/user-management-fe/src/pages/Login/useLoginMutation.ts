@@ -1,9 +1,9 @@
-import axios from 'axios'
+import api from '../../api'
 import { useMutation } from 'react-query'
 import { Inputs } from './interfaces/Inputs'
 
 const loginService = async (email: string, password: string) => {
-  return axios.post('/login', { email, password })
+  return api.post('/login', { email, password })
 }
 
 export const useLoginMutation = () => {
