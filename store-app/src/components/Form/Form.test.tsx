@@ -1,5 +1,5 @@
 import React from 'react'
-import { screen, render, act } from '@testing-library/react'
+import { screen, render, act, waitFor } from '@testing-library/react'
 import Form from './Form'
 import userEvent from '@testing-library/user-event'
 
@@ -78,7 +78,7 @@ describe('when the user submits the form without values', () => {
 })
 
 describe('when the user blurs an empty field', () => {
-  it('should desplay a validation error message for the input name', () => {
+  it('should display a validation error message for the input name', () => {
     const inputElement = screen.getByLabelText(/name/i) as HTMLInputElement
 
     expect(screen.queryByText(/the name is required/i)).not.toBeInTheDocument()
@@ -91,7 +91,7 @@ describe('when the user blurs an empty field', () => {
     expect(screen.queryByText(/the name is required/i)).toBeInTheDocument()
   })
 
-  it('should desplay a validation error message for the input size', () => {
+  it('should display a validation error message for the input size', () => {
     const inputElement = screen.getByLabelText(/size/i) as HTMLInputElement
 
     expect(screen.queryByText(/the size is required/i)).not.toBeInTheDocument()
@@ -102,5 +102,20 @@ describe('when the user blurs an empty field', () => {
     })
 
     expect(screen.queryByText(/the size is required/i)).toBeInTheDocument()
+  })
+})
+
+describe('when the user submits the form', () => {
+  it('should has to be disabled the submit button until the request is done', async () => {
+    expect(screen.getByRole('button', { name: /submit/i })).not.toBeDisabled()
+
+    act(() => {
+      userEvent.click(screen.getByRole('button', { name: /submit/i }))
+    })
+
+    expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled()
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /submit/i })).not.toBeDisabled()
+    })
   })
 })

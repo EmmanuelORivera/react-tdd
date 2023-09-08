@@ -4,9 +4,12 @@ import React, { useState } from 'react'
 const Form = () => {
   const [formErrors, setFormErrors] = useState({ name: '', size: '', type: '' })
   const [formData, setFormData] = useState({ name: '', size: '', type: '' })
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    setIsLoading(true)
 
     if (!formData.name) {
       setFormErrors((prevState) => ({
@@ -28,6 +31,13 @@ const Form = () => {
         type: 'The type is required',
       }))
     }
+
+    await fetch('/products', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    })
+
+    setIsLoading(false)
   }
 
   const handleChange = (
@@ -93,7 +103,9 @@ const Form = () => {
         </NativeSelect>
 
         {formErrors.type && <p>{formErrors.type}</p>}
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isLoading}>
+          Submit
+        </Button>
       </form>
     </>
   )
