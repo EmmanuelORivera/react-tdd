@@ -1,12 +1,13 @@
 import React from 'react'
-import { screen, render, act, fireEvent } from '@testing-library/react'
+import { screen, render, act } from '@testing-library/react'
 import Form from './Form'
 import userEvent from '@testing-library/user-event'
 
+beforeEach(() => {
+  render(<Form />)
+})
+
 describe('when the form is mounted', () => {
-  beforeEach(() => {
-    render(<Form />)
-  })
   it('there must be a create product form page', () => {
     expect(
       screen.queryByRole('heading', { name: /create product/i })
@@ -30,8 +31,6 @@ describe('when the form is mounted', () => {
 
 describe('when the form inputs are changed', () => {
   it('should update the name field value on change', () => {
-    render(<Form />)
-
     const nameInput = screen.getByLabelText(/name/i) as HTMLInputElement
 
     act(() => {
@@ -42,8 +41,6 @@ describe('when the form inputs are changed', () => {
   })
 
   it('should update the size field value on change', () => {
-    render(<Form />)
-
     const sizeInput = screen.getByLabelText(/size/i) as HTMLInputElement
 
     act(() => {
@@ -54,8 +51,6 @@ describe('when the form inputs are changed', () => {
   })
 
   it('should update the type field value on change', () => {
-    render(<Form />)
-
     const typeInput = screen.getByLabelText(/type/i) as HTMLSelectElement
 
     act(() => {
@@ -68,9 +63,9 @@ describe('when the form inputs are changed', () => {
 
 describe('when the user submits the form without values', () => {
   it('should display validation messages', () => {
-    render(<Form />)
-
     expect(screen.queryByText(/the name is required/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/the size is required/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/the type is required/i)).not.toBeInTheDocument()
 
     act(() => {
       userEvent.click(screen.getByRole('button', { name: /submit/i }))
@@ -79,5 +74,33 @@ describe('when the user submits the form without values', () => {
     expect(screen.queryByText(/the name is required/i)).toBeInTheDocument()
     expect(screen.queryByText(/the size is required/i)).toBeInTheDocument()
     expect(screen.queryByText(/the type is required/i)).toBeInTheDocument()
+  })
+})
+
+describe('when the user blurs an empty field', () => {
+  it('should desplay a validation error message for the input name', () => {
+    const inputElement = screen.getByLabelText(/name/i) as HTMLInputElement
+
+    expect(screen.queryByText(/the name is required/i)).not.toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(inputElement)
+      userEvent.tab()
+    })
+
+    expect(screen.queryByText(/the name is required/i)).toBeInTheDocument()
+  })
+
+  it('should desplay a validation error message for the input size', () => {
+    const inputElement = screen.getByLabelText(/size/i) as HTMLInputElement
+
+    expect(screen.queryByText(/the size is required/i)).not.toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(inputElement)
+      userEvent.tab()
+    })
+
+    expect(screen.queryByText(/the size is required/i)).toBeInTheDocument()
   })
 })

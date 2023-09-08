@@ -42,20 +42,35 @@ const Form = () => {
       [name]: value,
     }))
   }
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
+  ) => {
+    const { name, value } = e.target
+
+    setFormErrors((prevError) => ({
+      ...prevError,
+      [name]: value.length ? '' : `The ${name} is required`,
+    }))
+  }
   return (
     <>
       <h1>Create Product</h1>
 
       <form onSubmit={handleSubmit}>
         <TextField
+          onBlur={handleBlur}
           onChange={handleChange}
+          name="name"
           label="name"
           id="name"
           helperText={formErrors.name}
         />
 
         <TextField
+          onBlur={handleBlur}
           onChange={handleChange}
+          name="size"
           label="size"
           id="size"
           helperText={formErrors.size}
