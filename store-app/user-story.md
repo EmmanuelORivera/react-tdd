@@ -7,14 +7,14 @@ administrating my products.
 
 **Acceptance Criteria (AC):**
 
-- There must be a create product form page.
-- The form must have the following fields: name, size, type (electronic,
-  furniture, clothing) and a submit button.
-- All the fields are required.
-  - If the user leaves empty fields and clicks the submit button, the form page
-    must display required messages as the format: _“The [field name] is
-    required”_ aside of the proper field.
-  - If the user blurs a field that is empty, then the form must display the
+- [x] There must be a create product form page.
+- [x] The form must have the following fields: name, size, type (electronic,
+      furniture, clothing) and a submit button.
+- [x] All the fields are required.
+  - [x] If the user leaves empty fields and clicks the submit button, the form page
+        must display required messages as the format: _“The [field name] is
+        required”_ aside of the proper field.
+  - [] If the user blurs a field that is empty, then the form must display the
     required message for that field.
 - The form must send the data to a backend endpoint service.
   - The submit button should be disabbled while the form page is fetching the
