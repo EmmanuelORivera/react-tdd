@@ -1,36 +1,52 @@
 import { TextField, NativeSelect, InputLabel, Button } from '@mui/material'
 import React, { useState } from 'react'
 
+type InputsForm = {
+  name: string
+  size: string
+  type: string
+}
 const Form = () => {
-  const [formErrors, setFormErrors] = useState({ name: '', size: '', type: '' })
-  const [formData, setFormData] = useState({ name: '', size: '', type: '' })
+  const [formErrors, setFormErrors] = useState<InputsForm>({
+    name: '',
+    size: '',
+    type: '',
+  })
+  const [formData, setFormData] = useState<InputsForm>({
+    name: '',
+    size: '',
+    type: '',
+  })
   const [isLoading, setIsLoading] = useState(false)
 
+  const updateFormError = (
+    fieldName: keyof InputsForm,
+    errorMessage: string
+  ) => {
+    setFormErrors((prevState) => ({
+      ...prevState,
+      [fieldName]: errorMessage,
+    }))
+  }
+  const validateForm = () => {
+    if (!formData.name) {
+      updateFormError('name', 'The name is required')
+    }
+
+    if (!formData.size) {
+      updateFormError('size', 'The size is required')
+    }
+
+    if (!formData.type) {
+      updateFormError('type', 'The type is required')
+    }
+  }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setIsLoading(true)
 
-    if (!formData.name) {
-      setFormErrors((prevState) => ({
-        ...prevState,
-        name: 'The name is required',
-      }))
-    }
-
-    if (!formData.size) {
-      setFormErrors((prevState) => ({
-        ...prevState,
-        size: 'The size is required',
-      }))
-    }
-
-    if (!formData.type) {
-      setFormErrors((prevState) => ({
-        ...prevState,
-        type: 'The type is required',
-      }))
-    }
+    validateForm()
 
     await fetch('/products', {
       method: 'POST',
