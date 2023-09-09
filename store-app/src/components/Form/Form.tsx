@@ -1,5 +1,6 @@
 import { TextField, NativeSelect, InputLabel, Button } from '@mui/material'
 import React, { useState } from 'react'
+import ProductServices from '../../services/ProductServices'
 
 type InputsForm = {
   name: string
@@ -48,11 +49,7 @@ const Form = () => {
 
     validateForm()
 
-    await fetch('/products', {
-      method: 'POST',
-      body: JSON.stringify({}),
-    })
-
+    await ProductServices.saveProduct(formData)
     setIsLoading(false)
   }
 
