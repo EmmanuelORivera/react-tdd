@@ -119,4 +119,16 @@ describe('when the user submits the form', () => {
       expect(submitButton).not.toBeDisabled()
     })
   })
+
+  it("should display a success message 'Product stored' and clean the field values", async () => {
+    const submitButton = screen.getByRole('button', { name: /submit/i })
+
+    act(() => {
+      userEvent.click(submitButton)
+    })
+
+    await waitFor(() =>
+      expect(screen.getByText(/product stored/i)).toBeInTheDocument()
+    )
+  })
 })

@@ -1,6 +1,7 @@
 import { TextField, NativeSelect, InputLabel, Button } from '@mui/material'
 import React, { useState } from 'react'
-import ProductServices from '../../services/ProductServices'
+import ProductServices from '../../services/ProductService'
+import { CREATED_STATUS } from '../../consts/httpStatus'
 
 type InputsForm = {
   name: string
@@ -19,6 +20,7 @@ const Form = () => {
     type: '',
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const updateFormError = (
     fieldName: keyof InputsForm,
@@ -49,7 +51,11 @@ const Form = () => {
 
     validateForm()
 
-    await ProductServices.saveProduct(formData)
+    const response = await ProductServices.saveProduct(formData)
+
+    if (response.status === CREATED_STATUS) {
+      setIsSuccess(true)
+    }
     setIsLoading(false)
   }
 
@@ -80,6 +86,7 @@ const Form = () => {
     <>
       <h1>Create Product</h1>
 
+      {isSuccess && <p>Product Stored</p>}
       <form onSubmit={handleSubmit}>
         <TextField
           onBlur={handleBlur}
